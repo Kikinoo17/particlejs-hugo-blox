@@ -4,10 +4,35 @@
 }
 {{- end -}}
 
-<div class="particle-bg relative overflow-hidden">
-  <div id="particles-js" class="absolute inset-0 z-0"></div>
+{{- $page := .wcPage -}}
+{{- $block := .wcBlock -}}
+
+{{- $configPath := or $block.content.config "js/particles-config.json" -}}
+{{- $containerID := or $block.content.container_id "particles-js" -}}
+
+{{- $bgLight := $block.content.bg_color.light | default "#ffffff" -}}
+{{- $bgDark := $block.content.bg_color.dark | default "#000000" -}}
+{{- $opacity := or $block.content.opacity "1" -}}
+<style>
+  :root {
+    --particle-bg-color-light: {{ $bgLight }};
+    --particle-bg-color-dark: {{ $bgDark }};
+  }
+</style>
+
+<div class="particle-bg relative overflow-hidden {{ $block.content.bg_classes }}" style="opacity: {{ $opacity }};">
+  <div id="{{ $containerID }}" class="absolute inset-0 z-0"></div>
 
   <div class="relative z-10">
-    {{ .Inner }}
+    {{- range $index, $b := $block.content.content }}
+      {{- partial "functions/parse_block_v2" (dict "page" $page "block" $b) }}
+    {{- end }}
   </div>
 </div>
+
+{{- /* Chargement dynamique du JS */ -}}
+{{ $script := resources.Get "js/particles.min.js" | resources.Fingerprint }}
+<script src="{{ $script.RelPermalink }}"></script>
+<script>
+  particlesJS.load('{{ $containerID }}', '{{ $configPath | relURL }}');
+</script>

@@ -1,1 +1,9 @@
 /* Add your block styles here */
+
+.particle-bg {
+    background-color: var(--particle-bg-color-light);
+}
+
+.dark .particle-bg {
+    background-color: var(--particle-bg-color-dark);
+}
