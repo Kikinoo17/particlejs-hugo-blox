@@ -1,3 +1,3 @@
-module github.com/Kikinoo17/particlejs-hugo-blox
+module github.com/Kikinoo17/hugo-blox-particlejs
 
 go 1.19
